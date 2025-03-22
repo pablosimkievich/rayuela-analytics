@@ -12,10 +12,41 @@
 .chart-container {
     margin: 20px auto;
     width: 95%;
-    max-width: 800px;
+    max-width: 1200px;
     height: 80vh;
     position: relative;
     background: #0A0203;
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
+    color: #FF6B35;
+    text-align: left;
+    padding: 2rem calc(3.5% + 1rem); /* Increased left padding */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px #FF6B35;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+}
+
+p {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 5px #FF6B35;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    opacity: 0.9;
+    max-width: 600px;
 }
 
 .star-background {
@@ -26,69 +57,59 @@
     height: 100%;
     z-index: 0;
 }
-
-.main-content {
-    position: relative;
-    z-index: 1;
-    color: #FF6B35;
-    text-align: center;
-    padding: 2rem;
-}
-
-h1 {
-    text-shadow: 0 0 10px #FF6B35;
-    margin-bottom: 1rem;
-}
-
-p {
-    text-shadow: 0 0 5px #FF6B35;
-}
 </style>
 
 <%- contentFor('script') %>
 <script>
-const starCanvas = document.getElementById('starCanvas');
-const starCtx = starCanvas.getContext('2d');
-let stars = [];
+document.addEventListener('DOMContentLoaded', function() {
+    const starCanvas = document.getElementById('starCanvas');
+    const starCtx = starCanvas.getContext('2d');
+    let stars = [];
 
-function resizeCanvas() {
-    const container = document.querySelector('.chart-container');
-    const width = container.offsetWidth;
-    const height = container.offsetHeight;
-    
-    starCanvas.width = width;
-    starCanvas.height = height;
-    
-    createStars();
-}
-
-function createStars() {
-    stars = [];
-    for(let i = 0; i < 100; i++) {
-        stars.push({
-            x: Math.random() * starCanvas.width,
-            y: Math.random() * starCanvas.height,
-            size: Math.random() * 2 + 1,
-            brightness: Math.random()
-        });
+    function resizeCanvas() {
+        const container = document.querySelector('.chart-container');
+        const width = container.offsetWidth;
+        const height = container.offsetHeight;
+        
+        starCanvas.width = width;
+        starCanvas.height = height;
+        
+        createStars();
     }
-}
 
-function drawStars() {
-    starCtx.fillStyle = '#0A0203';
-    starCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
-    
-    stars.forEach(star => {
-        star.brightness = Math.sin(Date.now() / 1000 + star.x) * 0.5 + 0.5;
-        starCtx.fillStyle = `rgba(255, 107, 53, ${star.brightness * 0.7})`; // Orange color
-        starCtx.fillRect(star.x, star.y, star.size, star.size);
-    });
-    
-    requestAnimationFrame(drawStars);
-}
+    function createStars() {
+        stars = [];
+        for(let i = 0; i < 100; i++) {
+            stars.push({
+                x: Math.random() * starCanvas.width,
+                y: Math.random() * starCanvas.height,
+                size: Math.random() * 2 + 1,
+                brightness: Math.random()
+            });
+        }
+    }
 
-resizeCanvas();
-drawStars();
-window.addEventListener('resize', resizeCanvas);
+    function drawStars() {
+        starCtx.fillStyle = '#0A0203';
+        starCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
+        
+        stars.forEach(star => {
+            star.brightness = Math.sin(Date.now() / 1000 + star.x) * 0.5 + 0.5;
+            starCtx.fillStyle = `rgba(255, 0, 0, ${star.brightness * 0.7})`; // Pure red stars
+            starCtx.fillRect(star.x, star.y, star.size, star.size);
+        });
+        
+        requestAnimationFrame(drawStars);
+    }
+
+    resizeCanvas();
+    drawStars();
+    window.addEventListener('resize', resizeCanvas);
+});
 </script>
+
+
+
+
+
 

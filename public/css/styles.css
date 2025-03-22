@@ -1,0 +1,70 @@
+body {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    background: #3B0910;
+    color: #FF6B35;
+}
+
+.header {
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 2px solid #FF6B35;
+    box-shadow: 0 0 10px #FF6B35;
+    padding: 1rem;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-link {
+    color: #FF6B35;
+    text-decoration: none;
+    text-shadow: 0 0 5px #FF6B35;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background: rgba(255, 107, 53, 0.2);
+    border-radius: 5px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #FF6B35;
+    box-shadow: 0 0 10px #FF6B35;
+    border-radius: 5px;
+    min-width: 200px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.chart-container {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #FF6B35;
+    box-shadow: 0 0 10px #FF6B35;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 2rem;
+}
+
+.main-content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}

@@ -1,0 +1,30 @@
+/rayuela-analytics
+  /config
+  /models
+  /public
+    /css
+    /js
+  /routes
+  /views
+    /layouts
+    /grafik
+    /estadisticas
+
+
+
+
+    /grafics
+  /routes
+    home.js
+    grafik.js
+    estadisticas.js
+  /views
+    /home
+      index.ejs
+    /grafik
+      index.ejs
+      lineas.ejs
+    /estadisticas
+      index.ejs
+    /layouts
+      main.ejs

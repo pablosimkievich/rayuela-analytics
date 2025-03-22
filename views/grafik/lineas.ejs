@@ -1,0 +1,42 @@
+<%- include('../layouts/main') %>
+
+<div class="chart-container">
+    <canvas id="lineChart"></canvas>
+</div>
+
+<script>
+const ctx = document.getElementById('lineChart').getContext('2d');
+const data = <%- JSON.stringify(data) %>;
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: data.map(d => new Date(d.fecha).toLocaleDateString()),
+        datasets: [{
+            label: 'Valores',
+            data: data.map(d => d.valor),
+            borderColor: '#FF6B35',
+            backgroundColor: 'rgba(255, 107, 53, 0.2)',
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#FF6B35'
+                }
+            }
+        },
+        scales: {
+            y: {
+                ticks: { color: '#FF6B35' }
+            },
+            x: {
+                ticks: { color: '#FF6B35' }
+            }
+        }
+    }
+});
+</script>

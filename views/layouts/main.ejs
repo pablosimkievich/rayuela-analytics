@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Rayuela Analytics</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <div class="nav-left">
+                <a href="/" class="nav-link">HOME</a>
+                <div class="dropdown">
+                    <a href="/grafik" class="nav-link">GRAFIK</a>
+                    <div class="dropdown-content">
+                        <a href="/grafik/lineas" class="nav-link">Gráfico de Líneas</a>
+                        <a href="/grafik/barras" class="nav-link">Gráfico de Barras</a>
+                        <a href="/grafik/pie" class="nav-link">Gráfico Circular</a>
+                        <a href="/grafik/productos-precio" class="nav-link">Productos por Precio</a>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <a href="/estadisticas" class="nav-link">ESTADÍSTICAS</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <%- body %>
+    </main>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,53 @@
+<div class="chart-container">
+    <canvas id="productPriceChart"></canvas>
+</div>
+
+<script>
+const ctx = document.getElementById('productPriceChart').getContext('2d');
+const data = <%- JSON.stringify(data) %>;
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: data.map(p => p.name),
+        datasets: [{
+            label: 'Precio ($)',
+            data: data.map(p => p.price),
+            backgroundColor: 'rgba(54, 162, 235, 0.8)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Productos por Precio'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Precio ($)'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Productos'
+                },
+                ticks: {
+                    maxRotation: 45,
+                    minRotation: 45
+                }
+            }
+        }
+    }
+});
+</script>

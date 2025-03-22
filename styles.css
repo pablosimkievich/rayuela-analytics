@@ -1,0 +1,51 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #3B0910; /* Dark bordeaux */
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#score-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 15px;
+    border: 2px solid #FF6B35;
+    box-shadow: 0 0 10px #FF6B35;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+}
+
+.neon-text {
+    color: #FF6B35;
+    text-shadow: 0 0 5px #FF6B35;
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    margin: 5px 0;
+}
+
+#energy-container {
+    width: 200px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #FF6B35;
+    margin-top: 10px;
+}
+
+#energy-bar {
+    width: 100%;
+    height: 100%;
+    background: #FF6B35;
+    transition: width 0.3s;
+}

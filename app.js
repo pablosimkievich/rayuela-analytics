@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const sequelize = require('./config/database');
+const { sequelize, User, Order } = require('./models');
 const expressLayouts = require('express-ejs-layouts');
 
 const app = express();
@@ -17,14 +17,18 @@ app.set('layout extractStyles', true);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Sync database
+sequelize.sync()
+    .then(() => {
+        console.log('Database synced successfully');
+    })
+    .catch(err => {
+        console.error('Error syncing database:', err);
+    });
+
 // Rutas
 app.use('/', require('./routes/home'));
 app.use('/graficos', require('./routes/grafik'));
-
-// Prueba de conexión a la base de datos
-sequelize.authenticate()
-  .then(() => console.log('Conexión a la base de datos establecida'))
-  .catch(err => console.error('Error conectando a la base de datos:', err));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

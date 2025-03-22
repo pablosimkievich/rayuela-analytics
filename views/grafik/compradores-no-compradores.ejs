@@ -1,105 +1,146 @@
-<%- contentFor('body') %>
-<div class="chart-container">
-    <canvas id="starCanvas" class="star-background"></canvas>
-    <canvas id="buyersChart"></canvas>
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Rayuela Analytics - Compradores vs No Compradores</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: #0A0203;
+        }
+        .chart-container {
+            margin: 20px auto;
+            width: 95%;
+            max-width: 800px;
+            height: 80vh;
+            position: relative;
+            background: #0A0203;
+        }
+        .star-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        #buyersChart {
+            position: relative;
+            z-index: 1;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <canvas id="starCanvas" class="star-background"></canvas>
+        <canvas id="buyersChart"></canvas>
+    </div>
 
-<%- contentFor('script') %>
-<script>
-// Star background configuration
-const starCanvas = document.getElementById('starCanvas');
-const starCtx = starCanvas.getContext('2d');
-let stars = [];
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing chart with data:', <%- JSON.stringify(data) %>);
+            
+            // Star background setup
+            const starCanvas = document.getElementById('starCanvas');
+            const starCtx = starCanvas.getContext('2d');
+            let stars = [];
 
-function resizeCanvas() {
-    const container = document.querySelector('.chart-container');
-    const width = container.offsetWidth;
-    const height = container.offsetHeight;
-    
-    starCanvas.width = width;
-    starCanvas.height = height;
-    
-    const buyersChart = document.getElementById('buyersChart');
-    buyersChart.width = width;
-    buyersChart.height = height;
-    
-    createStars();
-}
+            function resizeCanvas() {
+                const container = document.querySelector('.chart-container');
+                starCanvas.width = container.offsetWidth;
+                starCanvas.height = container.offsetHeight;
+                
+                const buyersChart = document.getElementById('buyersChart');
+                buyersChart.width = container.offsetWidth;
+                buyersChart.height = container.offsetHeight;
+                
+                createStars();
+            }
 
-function createStars() {
-    stars = [];
-    for(let i = 0; i < 100; i++) {
-        stars.push({
-            x: Math.random() * starCanvas.width,
-            y: Math.random() * starCanvas.height,
-            size: Math.random() * 2 + 1,
-            brightness: Math.random()
-        });
-    }
-}
-
-function drawStars() {
-    starCtx.fillStyle = '#0A0203';
-    starCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
-    
-    stars.forEach(star => {
-        star.brightness = Math.sin(Date.now() / 1000 + star.x) * 0.5 + 0.5;
-        starCtx.fillStyle = `rgba(255, 107, 53, ${star.brightness * 0.7})`;
-        starCtx.fillRect(star.x, star.y, star.size, star.size);
-    });
-    
-    requestAnimationFrame(drawStars);
-}
-
-resizeCanvas();
-drawStars();
-window.addEventListener('resize', resizeCanvas);
-
-// Chart configuration
-const ctx = document.getElementById('buyersChart').getContext('2d');
-const data = <%- JSON.stringify(data) %>;
-
-const chart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: data.labels,
-        datasets: [{
-            data: data.values,
-            backgroundColor: [
-                'rgba(255, 107, 53, 0.8)',
-                'rgba(255, 159, 64, 0.8)'
-            ],
-            borderColor: [
-                '#FF6B35',
-                '#FF9F40'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'top',
-                labels: {
-                    color: '#FF6B35',
-                    font: {
-                        size: 14
-                    }
-                }
-            },
-            title: {
-                display: true,
-                text: 'Distribución de Usuarios',
-                color: '#FF6B35',
-                font: {
-                    size: 16
+            function createStars() {
+                stars = [];
+                for(let i = 0; i < 100; i++) {
+                    stars.push({
+                        x: Math.random() * starCanvas.width,
+                        y: Math.random() * starCanvas.height,
+                        size: Math.random() * 2 + 1,
+                        brightness: Math.random()
+                    });
                 }
             }
-        }
-    }
-});
-</script>
 
+            function drawStars() {
+                starCtx.fillStyle = '#0A0203';
+                starCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
+                
+                stars.forEach(star => {
+                    star.brightness = Math.sin(Date.now() / 1000 + star.x) * 0.5 + 0.5;
+                    starCtx.fillStyle = `rgba(255, 107, 53, ${star.brightness * 0.7})`;
+                    starCtx.fillRect(star.x, star.y, star.size, star.size);
+                });
+                
+                requestAnimationFrame(drawStars);
+            }
+
+            // Initialize star background
+            resizeCanvas();
+            drawStars();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Initialize the pie chart
+            const ctx = document.getElementById('buyersChart').getContext('2d');
+            
+            try {
+                const chart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: <%- JSON.stringify(data.labels) %>,
+                        datasets: [{
+                            data: <%- JSON.stringify(data.values) %>,
+                            backgroundColor: [
+                                'rgba(255, 107, 53, 0.8)',
+                                'rgba(255, 159, 64, 0.8)'
+                            ],
+                            borderColor: [
+                                '#FF6B35',
+                                '#FF9F40'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    color: '#FF6B35',
+                                    font: {
+                                        size: 14
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Distribución de Usuarios',
+                                color: '#FF6B35',
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Chart initialized successfully');
+            } catch (error) {
+                console.error('Error initializing chart:', error);
+            }
+        });
+    </script>
+</body>
+</html>
 

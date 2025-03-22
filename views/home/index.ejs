@@ -1,4 +1,94 @@
-<div class="main-content">
-    <h1>Bienvenido a Rayuela Analytics</h1>
-    <p>Seleccione una opción del menú para visualizar diferentes tipos de gráficos y estadísticas.</p>
+<%- contentFor('body') %>
+<div class="chart-container">
+    <canvas id="starCanvas" class="star-background"></canvas>
+    <div class="main-content">
+        <h1>Bienvenido a Rayuela Analytics</h1>
+        <p>Seleccione una opción del menú para visualizar diferentes tipos de gráficos y estadísticas.</p>
+    </div>
 </div>
+
+<%- contentFor('style') %>
+<style>
+.chart-container {
+    margin: 20px auto;
+    width: 95%;
+    max-width: 800px;
+    height: 80vh;
+    position: relative;
+    background: #0A0203;
+}
+
+.star-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
+    color: #FF6B35;
+    text-align: center;
+    padding: 2rem;
+}
+
+h1 {
+    text-shadow: 0 0 10px #FF6B35;
+    margin-bottom: 1rem;
+}
+
+p {
+    text-shadow: 0 0 5px #FF6B35;
+}
+</style>
+
+<%- contentFor('script') %>
+<script>
+const starCanvas = document.getElementById('starCanvas');
+const starCtx = starCanvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+    const container = document.querySelector('.chart-container');
+    const width = container.offsetWidth;
+    const height = container.offsetHeight;
+    
+    starCanvas.width = width;
+    starCanvas.height = height;
+    
+    createStars();
+}
+
+function createStars() {
+    stars = [];
+    for(let i = 0; i < 100; i++) {
+        stars.push({
+            x: Math.random() * starCanvas.width,
+            y: Math.random() * starCanvas.height,
+            size: Math.random() * 2 + 1,
+            brightness: Math.random()
+        });
+    }
+}
+
+function drawStars() {
+    starCtx.fillStyle = '#0A0203';
+    starCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
+    
+    stars.forEach(star => {
+        star.brightness = Math.sin(Date.now() / 1000 + star.x) * 0.5 + 0.5;
+        starCtx.fillStyle = `rgba(255, 107, 53, ${star.brightness * 0.7})`; // Orange color
+        starCtx.fillRect(star.x, star.y, star.size, star.size);
+    });
+    
+    requestAnimationFrame(drawStars);
+}
+
+resizeCanvas();
+drawStars();
+window.addEventListener('resize', resizeCanvas);
+</script>
+

@@ -1,22 +1,20 @@
-module.exports = (sequelize, DataTypes) => {
-    const Product = sequelize.define('Product', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false
-        }
-        // Add other product fields as needed
-    });
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-    Product.associate = function(models) {
-        Product.hasMany(models.OrderDetail, {
-            foreignKey: 'fk_product_id'
-        });
-    };
+const Product = sequelize.define('Product', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+    // Add other product fields as needed
+}, {
+    tableName: 'products',
+    timestamps: false
+});
 
-    return Product;
-};
+module.exports = Product;

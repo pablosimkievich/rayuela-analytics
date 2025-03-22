@@ -64,6 +64,63 @@ module.exports = {
                 details: error.message
             });
         }
+    },
+    montoPorCompra: async (req, res) => {
+        try {
+            console.log('Starting montoPorCompra controller');
+            
+            if (!db || !db.Order) {
+                throw new Error('Models not properly initialized');
+            }
+
+            // Get summary statistics
+            const results = await db.Order.findAll({
+                attributes: [
+                    [db.sequelize.fn('COUNT', db.sequelize.col('id')), 'totalOrders'],
+                    [db.sequelize.fn('SUM', db.sequelize.col('order_total_amt')), 'totalAmount']
+                ]
+            });
+
+            // Get individual orders for the chart, ordered by date
+            const orders = await db.Order.findAll({
+                attributes: [
+                    'id', 
+                    'order_total_amt',
+                    'order_date',
+                    'order_status'
+                ],
+                order: [['order_date', 'ASC']]
+            });
+
+            const stats = {
+                totalOrders: results[0].dataValues.totalOrders,
+                totalAmount: Number(results[0].dataValues.totalAmount).toFixed(2)
+            };
+
+            const chartData = orders.map(order => ({
+                id: order.id,
+                amount: Number(order.order_total_amt),
+                date: order.order_date,
+                status: order.order_status
+            }));
+
+            console.log('Order statistics:', stats);
+
+            return res.render('grafik/monto-por-compra', {
+                data: stats,
+                chartData: chartData,
+                title: 'Monto por Compra'
+            });
+
+        } catch (error) {
+            console.error('Error en montoPorCompra:', error);
+            return res.status(500).json({
+                error: 'Error al obtener los datos de órdenes',
+                details: error.message
+            });
+        }
     }
 };
+
+
 

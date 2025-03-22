@@ -43,4 +43,7 @@ router.get('/productos-precio', async (req, res) => {
 
 router.get('/compradores-no-compradores', grafikController.compradoresNoCompradores);
 
+router.get('/monto-por-compra', grafikController.montoPorCompra);
+
+
 module.exports = router;

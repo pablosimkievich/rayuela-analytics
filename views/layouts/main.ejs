@@ -5,6 +5,7 @@
     <title>Rayuela Analytics</title>
     <link rel="stylesheet" href="/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <%- defineContent('style') %>
 </head>
 <body>
     <header class="header">
@@ -18,6 +19,7 @@
                         <a href="/grafik/barras" class="nav-link">Gráfico de Barras</a>
                         <a href="/grafik/pie" class="nav-link">Gráfico Circular</a>
                         <a href="/grafik/productos-precio" class="nav-link">Productos por Precio</a>
+                        <a href="/grafik/compradores-no-compradores" class="nav-link">Compradores vs No Compradores</a>
                     </div>
                 </div>
             </div>
@@ -31,8 +33,6 @@
         <%- body %>
     </main>
 
-    <script src="/js/main.js"></script>
+    <%- defineContent('script') %>
 </body>
-</html>
-
 

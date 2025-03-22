@@ -8,8 +8,13 @@ const app = express();
 // Configuración
 app.set('view engine', 'ejs');
 app.set('views', 'views');
+
+// Configuración de express-ejs-layouts
 app.use(expressLayouts);
 app.set('layout', 'layouts/main');
+app.set('layout extractScripts', true);
+app.set('layout extractStyles', true);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas

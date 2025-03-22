@@ -1,0 +1,31 @@
+<%- contentFor('body') %>
+<div class="chart-container">
+    <canvas id="starCanvas" class="star-background"></canvas>
+    <canvas id="pieChart"></canvas>
+</div>
+
+<%- contentFor('script') %>
+<%- include('../partials/star-background') %>
+<script>
+const ctx = document.getElementById('pieChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        // Your chart data here
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#FF6B35'
+                }
+            },
+            title: {
+                color: '#FF6B35'
+            }
+        }
+    }
+});
+</script>

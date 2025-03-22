@@ -4,7 +4,7 @@ const sequelize = require('../config/database');
 const grafikController = require('../controllers/grafikController');
 
 router.get('/', (req, res) => {
-    res.render('grafik/index', {
+    res.render('graficos/index', {
         title: 'Gráficos'
     });
 });
@@ -15,7 +15,7 @@ router.get('/lineas', async (req, res) => {
             'SELECT fecha, valor FROM mediciones ORDER BY fecha'
         );
         
-        res.render('grafik/lineas', {
+        res.render('graficos/lineas', {
             title: 'Gráfico de Líneas',
             data: results
         });
@@ -28,10 +28,10 @@ router.get('/lineas', async (req, res) => {
 router.get('/productos-precio', async (req, res) => {
     try {
         const [results] = await sequelize.query(
-            'SELECT SUBSTRING(name, 1, 30) as name, price FROM products ORDER BY price DESC'
+            'SELECT name, price FROM products ORDER BY price DESC'
         );
         
-        res.render('grafik/productos-precio', {
+        res.render('graficos/productos-precio', {
             title: 'Productos por Precio',
             data: results
         });

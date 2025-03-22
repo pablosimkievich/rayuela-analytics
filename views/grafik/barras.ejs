@@ -1,0 +1,49 @@
+<%- contentFor('body') %>
+<div class="chart-container">
+    <canvas id="starCanvas" class="star-background"></canvas>
+    <canvas id="barChart"></canvas>
+</div>
+
+<%- contentFor('script') %>
+<%- include('../partials/star-background') %>
+<script>
+const ctx = document.getElementById('barChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        // Your chart data here
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#FF6B35'
+                }
+            },
+            title: {
+                color: '#FF6B35'
+            }
+        },
+        scales: {
+            y: {
+                grid: {
+                    color: 'rgba(255, 107, 53, 0.1)'
+                },
+                ticks: {
+                    color: '#FF6B35'
+                }
+            },
+            x: {
+                grid: {
+                    color: 'rgba(255, 107, 53, 0.1)'
+                },
+                ticks: {
+                    color: '#FF6B35'
+                }
+            }
+        }
+    }
+});
+</script>

@@ -1,9 +1,60 @@
 <div class="chart-container" style="height: 80vh; position: relative;">
+    <canvas id="starCanvas" class="star-background"></canvas>
     <canvas id="productPriceChart"></canvas>
     <div id="magnifier" class="magnifier"></div>
 </div>
 
 <script>
+// Configuración de estrellas
+const starCanvas = document.getElementById('starCanvas');
+const starCtx = starCanvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+    const container = document.querySelector('.chart-container');
+    const width = container.offsetWidth;
+    const height = container.offsetHeight;
+    
+    starCanvas.width = width;
+    starCanvas.height = height;
+    
+    // Recrear estrellas cuando se redimensiona
+    createStars();
+}
+
+function createStars() {
+    stars = [];
+    for(let i = 0; i < 100; i++) {
+        stars.push({
+            x: Math.random() * starCanvas.width,
+            y: Math.random() * starCanvas.height,
+            size: Math.random() * 2 + 1,
+            brightness: Math.random()
+        });
+    }
+}
+
+function drawStars() {
+    starCtx.fillStyle = '#0A0203';
+    starCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
+    
+    stars.forEach(star => {
+        star.brightness = Math.sin(Date.now() / 1000 + star.x) * 0.5 + 0.5;
+        starCtx.fillStyle = `rgba(255, 107, 53, ${star.brightness * 0.7})`;
+        starCtx.fillRect(star.x, star.y, star.size, star.size);
+    });
+    
+    requestAnimationFrame(drawStars);
+}
+
+// Inicializar el fondo de estrellas
+resizeCanvas();
+drawStars();
+
+// Manejar redimensionamiento
+window.addEventListener('resize', resizeCanvas);
+
+// Configuración del gráfico
 const ctx = document.getElementById('productPriceChart').getContext('2d');
 const data = <%- JSON.stringify(data) %>;
 const magnifier = document.getElementById('magnifier');
@@ -15,8 +66,8 @@ const chart = new Chart(ctx, {
         datasets: [{
             label: 'Precio ($)',
             data: data.map(p => p.price),
-            backgroundColor: 'rgba(54, 162, 235, 0.8)',
-            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(255, 107, 53, 0.8)',
+            borderColor: '#FF6B35',
             borderWidth: 1
         }]
     },
@@ -26,35 +77,46 @@ const chart = new Chart(ctx, {
         plugins: {
             legend: {
                 position: 'top',
+                labels: {
+                    color: '#FF6B35'
+                }
             },
             title: {
                 display: true,
                 text: 'Productos por Precio',
+                color: '#FF6B35',
                 font: {
                     size: 16
                 }
+            },
+            tooltip: {
+                enabled: false
             }
         },
         scales: {
             y: {
                 beginAtZero: true,
+                grid: {
+                    color: 'rgba(255, 107, 53, 0.1)'
+                },
+                ticks: {
+                    color: '#FF6B35'
+                },
                 title: {
                     display: true,
                     text: 'Precio ($)',
+                    color: '#FF6B35',
                     font: {
                         size: 14
                     }
                 }
             },
             x: {
-                title: {
-                    display: true,
-                    text: 'Productos',
-                    font: {
-                        size: 14
-                    }
+                grid: {
+                    color: 'rgba(255, 107, 53, 0.1)'
                 },
                 ticks: {
+                    color: '#FF6B35',
                     maxRotation: 90,
                     minRotation: 90,
                     font: {
@@ -68,6 +130,14 @@ const chart = new Chart(ctx, {
                         }
                         return label;
                     }
+                },
+                title: {
+                    display: true,
+                    text: 'Productos',
+                    color: '#FF6B35',
+                    font: {
+                        size: 14
+                    }
                 }
             }
         },
@@ -79,7 +149,7 @@ const chart = new Chart(ctx, {
         onHover: (event, elements) => {
             if (elements && elements.length) {
                 const element = elements[0];
-                const label = data[element.index].name;
+                const producto = data[element.index];
                 const rect = event.chart.canvas.getBoundingClientRect();
                 const x = event.native.clientX - rect.left;
                 const y = event.native.clientY - rect.top;
@@ -87,7 +157,10 @@ const chart = new Chart(ctx, {
                 magnifier.style.display = 'block';
                 magnifier.style.left = `${x}px`;
                 magnifier.style.top = `${y - 50}px`;
-                magnifier.textContent = label;
+                magnifier.innerHTML = `
+                    <div class="magnifier-name">${producto.name}</div>
+                    <div class="magnifier-price">$ ${producto.price.toLocaleString('es-AR')}</div>
+                `;
             } else {
                 magnifier.style.display = 'none';
             }
@@ -95,7 +168,6 @@ const chart = new Chart(ctx, {
     }
 });
 
-// Asegurarse de que el magnificador se oculte cuando el mouse sale del gráfico
 document.querySelector('.chart-container').addEventListener('mouseleave', () => {
     magnifier.style.display = 'none';
 });
@@ -107,18 +179,34 @@ document.querySelector('.chart-container').addEventListener('mouseleave', () => 
     width: 95%;
     max-width: 1200px;
     position: relative;
+    background: #0A0203;
+}
+
+.star-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+#productPriceChart {
+    position: relative;
+    z-index: 1;
+    background: transparent;
 }
 
 .magnifier {
     display: none;
     position: absolute;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(10, 2, 3, 0.9);
     color: #FF6B35;
-    padding: 8px 12px;
+    padding: 12px 16px;
     border-radius: 5px;
     font-size: 16px;
     pointer-events: none;
-    z-index: 1000;
+    z-index: 2;
     border: 2px solid #FF6B35;
     box-shadow: 0 0 10px #FF6B35;
     white-space: nowrap;
@@ -136,6 +224,21 @@ document.querySelector('.chart-container').addEventListener('mouseleave', () => 
     border-width: 5px;
     border-style: solid;
     border-color: #FF6B35 transparent transparent transparent;
+}
+
+.magnifier-name {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.magnifier-price {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+body {
+    background: #0A0203;
 }
 </style>
 

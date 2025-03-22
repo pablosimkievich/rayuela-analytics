@@ -1,0 +1,129 @@
+<%- contentFor('body') %>
+<div class="chart-container" style="height: 80vh; position: relative;">
+    <canvas id="starCanvas" class="star-background"></canvas>
+    <canvas id="buyersChart"></canvas>
+</div>
+
+<%- contentFor('style') %>
+<style>
+.chart-container {
+    margin: 20px auto;
+    width: 95%;
+    max-width: 800px;
+    position: relative;
+    background: #0A0203;
+}
+
+.star-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+#buyersChart {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+}
+
+body {
+    background: #0A0203;
+}
+</style>
+
+<%- contentFor('script') %>
+<script>
+// Configuración de estrellas
+const starCanvas = document.getElementById('starCanvas');
+const starCtx = starCanvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+    const container = document.querySelector('.chart-container');
+    const width = container.offsetWidth;
+    const height = container.offsetHeight;
+    
+    starCanvas.width = width;
+    starCanvas.height = height;
+    createStars();
+}
+
+function createStars() {
+    stars = [];
+    for(let i = 0; i < 100; i++) {
+        stars.push({
+            x: Math.random() * starCanvas.width,
+            y: Math.random() * starCanvas.height,
+            size: Math.random() * 2 + 1,
+            brightness: Math.random()
+        });
+    }
+}
+
+function drawStars() {
+    starCtx.fillStyle = '#0A0203';
+    starCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
+    
+    stars.forEach(star => {
+        star.brightness = Math.sin(Date.now() / 1000 + star.x) * 0.5 + 0.5;
+        starCtx.fillStyle = `rgba(255, 107, 53, ${star.brightness * 0.7})`;
+        starCtx.fillRect(star.x, star.y, star.size, star.size);
+    });
+    
+    requestAnimationFrame(drawStars);
+}
+
+resizeCanvas();
+drawStars();
+window.addEventListener('resize', resizeCanvas);
+
+// Configuración del gráfico circular
+const ctx = document.getElementById('buyersChart').getContext('2d');
+const data = <%- JSON.stringify(data) %>;
+
+const chart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: data.labels,
+        datasets: [{
+            data: data.values,
+            backgroundColor: [
+                'rgba(255, 107, 53, 0.8)',
+                'rgba(255, 159, 64, 0.8)'
+            ],
+            borderColor: [
+                '#FF6B35',
+                '#FF9F40'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: {
+                    color: '#FF6B35',
+                    font: {
+                        size: 14
+                    }
+                }
+            },
+            title: {
+                display: true,
+                text: 'Distribución de Usuarios',
+                color: '#FF6B35',
+                font: {
+                    size: 16
+                }
+            }
+        }
+    }
+});
+</script>
+

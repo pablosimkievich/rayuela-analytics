@@ -124,8 +124,84 @@ module.exports = {
                 details: error.message
             });
         }
+    },
+    ventasPorProducto: async (req, res) => {
+        try {
+            console.log('Starting ventasPorProducto controller');
+
+            // More detailed model checking
+            if (!db) {
+                throw new Error('Database connection not initialized');
+            }
+            if (!db.OrderDetail) {
+                throw new Error('OrderDetail model not initialized');
+            }
+            if (!db.Product) {
+                throw new Error('Product model not initialized');
+            }
+
+            console.log('Models validated, executing query...');
+
+            // Get total quantity sold per product with error handling
+            const results = await db.OrderDetail.findAll({
+                attributes: [
+                    'fk_product_id',
+                    [db.sequelize.fn('SUM', db.sequelize.col('quantity')), 'total_quantity']
+                ],
+                include: [{
+                    model: db.Product,
+                    attributes: ['name'],
+                    required: true
+                }],
+                group: ['fk_product_id', 'Product.id', 'Product.name'],
+                order: [[db.sequelize.fn('SUM', db.sequelize.col('quantity')), 'DESC']]
+            }).catch(err => {
+                console.error('Database query error:', err);
+                throw new Error(`Database query failed: ${err.message}`);
+            });
+
+            if (!results || results.length === 0) {
+                console.log('No sales data found');
+                return res.render('grafik/ventas-por-producto', {
+                    data: { labels: [], values: [] },
+                    title: 'Ventas por Producto',
+                    message: 'No hay datos de ventas disponibles'
+                });
+            }
+
+            // Format data for the chart
+            const chartData = {
+                labels: results.map(item => item.Product ? item.Product.name : 'Producto Desconocido'),
+                values: results.map(item => parseInt(item.dataValues.total_quantity) || 0)
+            };
+
+            console.log('Chart data prepared:', {
+                labelCount: chartData.labels.length,
+                valueCount: chartData.values.length
+            });
+
+            return res.render('grafik/ventas-por-producto', {
+                data: chartData,
+                title: 'Ventas por Producto'
+            });
+
+        } catch (error) {
+            console.error('Error detallado en ventasPorProducto:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
+            
+            return res.status(500).json({
+                error: 'Error al obtener los datos de ventas por producto',
+                details: error.message
+            });
+        }
     }
 };
+
+
+
 
 
 

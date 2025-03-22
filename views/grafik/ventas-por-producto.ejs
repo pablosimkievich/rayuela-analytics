@@ -1,0 +1,147 @@
+<div class="chart-container">
+    <canvas id="starCanvas" class="star-background"></canvas>
+    <canvas id="salesChart"></canvas>
+</div>
+
+<script>
+// Star background configuration
+const starCanvas = document.getElementById('starCanvas');
+const starCtx = starCanvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+    const container = document.querySelector('.chart-container');
+    const width = container.offsetWidth;
+    const height = container.offsetHeight;
+    
+    starCanvas.width = width;
+    starCanvas.height = height;
+    
+    createStars();
+}
+
+function createStars() {
+    stars = [];
+    for(let i = 0; i < 100; i++) {
+        stars.push({
+            x: Math.random() * starCanvas.width,
+            y: Math.random() * starCanvas.height,
+            size: Math.random() * 2 + 1,
+            brightness: Math.random()
+        });
+    }
+}
+
+function drawStars() {
+    starCtx.fillStyle = '#0A0203';
+    starCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
+    
+    stars.forEach(star => {
+        star.brightness = Math.sin(Date.now() / 1000 + star.x) * 0.5 + 0.5;
+        starCtx.fillStyle = `rgba(255, 107, 53, ${star.brightness * 0.7})`;
+        starCtx.fillRect(star.x, star.y, star.size, star.size);
+    });
+    
+    requestAnimationFrame(drawStars);
+}
+
+// Initialize star background
+resizeCanvas();
+drawStars();
+window.addEventListener('resize', resizeCanvas);
+
+// Sales Chart
+const ctx = document.getElementById('salesChart').getContext('2d');
+const chartData = <%- JSON.stringify(data) %>;
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: chartData.labels,
+        datasets: [{
+            label: 'Cantidad Vendida',
+            data: chartData.values,
+            backgroundColor: 'rgba(255, 107, 53, 0.8)',
+            borderColor: '#FF6B35',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#FF6B35'
+                }
+            },
+            title: {
+                display: true,
+                text: 'Cantidad de Productos Vendidos',
+                color: '#FF6B35',
+                font: {
+                    size: 16
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(255, 107, 53, 0.1)'
+                },
+                ticks: {
+                    color: '#FF6B35',
+                    stepSize: 1
+                },
+                title: {
+                    display: true,
+                    text: 'Cantidad',
+                    color: '#FF6B35'
+                }
+            },
+            x: {
+                grid: {
+                    color: 'rgba(255, 107, 53, 0.1)'
+                },
+                ticks: {
+                    color: '#FF6B35',
+                    maxRotation: 45,
+                    minRotation: 45,
+                    callback: function(val) {
+                        // Truncate long product names
+                        const label = this.getLabelForValue(val);
+                        if (label.length > 20) {
+                            return label.substr(0, 17) + '...';
+                        }
+                        return label;
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+
+<style>
+.chart-container {
+    position: relative;
+    height: 80vh;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.star-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+#salesChart {
+    position: relative;
+    z-index: 1;
+}
+</style>

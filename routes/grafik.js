@@ -45,5 +45,7 @@ router.get('/compradores-no-compradores', grafikController.compradoresNoComprado
 
 router.get('/monto-por-compra', grafikController.montoPorCompra);
 
+router.get('/ventas-por-producto', grafikController.ventasPorProducto);
+
 
 module.exports = router;

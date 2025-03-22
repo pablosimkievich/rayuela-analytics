@@ -47,5 +47,7 @@ router.get('/monto-por-compra', grafikController.montoPorCompra);
 
 router.get('/ventas-por-producto', grafikController.ventasPorProducto);
 
+router.get('/productos-por-categoria', grafikController.productosPorCategoria);
+
 
 module.exports = router;

@@ -195,6 +195,9 @@ module.exports = {
                 details: error.message
             });
         }
+    },
+    productosPorCategoria: async (req, res) => {
+        res.send('Productos por categoría')
     }
 };
 

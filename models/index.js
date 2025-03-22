@@ -7,6 +7,7 @@ const Order = require('./Order');
 const OrderDetail = require('./OrderDetail');
 const Product = require('./Product');
 const SecondaryImages = require('./SecondaryImages');
+const Category = require('./Category');
 
 // Definir relaciones
 User.hasMany(Order, {
@@ -24,14 +25,21 @@ Product.hasMany(OrderDetail, {
     foreignKey: 'fk_product_id'
 });
 
+// Add Category relationships
+Category.hasMany(Product, {
+    as: 'products',
+    foreignKey: 'category_id'
+});
+Product.belongsTo(Category, {
+    foreignKey: 'category_id'
+});
+
 module.exports = {
     User,
     Order,
     OrderDetail,
     Product,
     SecondaryImages,
+    Category,
     sequelize
 };
-
-
-

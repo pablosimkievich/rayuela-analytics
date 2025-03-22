@@ -56,17 +56,15 @@ resizeCanvas();
 drawStars();
 window.addEventListener('resize', resizeCanvas);
 
-// Category Chart
+// Initialize Chart
 const ctx = document.getElementById('categoryChart').getContext('2d');
-const chartData = <%- JSON.stringify(data) %>;
-
-new Chart(ctx, {
+const chart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: chartData.labels,
+        labels: <%- JSON.stringify(data.labels) %>,
         datasets: [{
-            label: 'Cantidad de Productos',
-            data: chartData.values,
+            label: 'Productos por Categoría',
+            data: <%- JSON.stringify(data.values) %>,
             backgroundColor: 'rgba(255, 107, 53, 0.8)',
             borderColor: '#FF6B35',
             borderWidth: 1
@@ -80,14 +78,6 @@ new Chart(ctx, {
                 labels: {
                     color: '#FF6B35'
                 }
-            },
-            title: {
-                display: true,
-                text: 'Productos por Categoría',
-                color: '#FF6B35',
-                font: {
-                    size: 16
-                }
             }
         },
         scales: {
@@ -97,12 +87,6 @@ new Chart(ctx, {
                     color: 'rgba(255, 107, 53, 0.1)'
                 },
                 ticks: {
-                    color: '#FF6B35',
-                    stepSize: 1
-                },
-                title: {
-                    display: true,
-                    text: 'Cantidad de Productos',
                     color: '#FF6B35'
                 }
             },
@@ -120,11 +104,16 @@ new Chart(ctx, {
 </script>
 
 <style>
+body {
+    background: #0A0203;
+}
+
 .chart-container {
     position: relative;
     height: 80vh;
-    width: 100%;
-    margin: 20px auto;
+    width: 95%;
+    margin: 20px auto 40px auto; /* Added margin-bottom */
+    max-width: 1200px;
 }
 
 .star-background {
@@ -133,7 +122,7 @@ new Chart(ctx, {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: 0;
 }
 
 #categoryChart {
@@ -172,3 +161,4 @@ new Chart(ctx, {
     opacity: 0.9;
 }
 </style>
+

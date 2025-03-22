@@ -1,0 +1,47 @@
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const starCanvas = document.getElementById('starCanvas');
+    const starCtx = starCanvas.getContext('2d');
+    let stars = [];
+
+    function resizeCanvas() {
+        const container = document.querySelector('.chart-container');
+        const width = container.offsetWidth;
+        const height = container.offsetHeight;
+        
+        starCanvas.width = width;
+        starCanvas.height = height;
+        
+        createStars();
+    }
+
+    function createStars() {
+        stars = [];
+        for(let i = 0; i < 100; i++) {
+            stars.push({
+                x: Math.random() * starCanvas.width,
+                y: Math.random() * starCanvas.height,
+                size: Math.random() * 2 + 1,
+                brightness: Math.random()
+            });
+        }
+    }
+
+    function drawStars() {
+        starCtx.fillStyle = '#0A0203';
+        starCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
+        
+        stars.forEach(star => {
+            star.brightness = Math.sin(Date.now() / 1000 + star.x) * 0.5 + 0.5;
+            starCtx.fillStyle = `rgba(255, 0, 0, ${star.brightness * 0.7})`; // Pure red stars
+            starCtx.fillRect(star.x, star.y, star.size, star.size);
+        });
+        
+        requestAnimationFrame(drawStars);
+    }
+
+    resizeCanvas();
+    drawStars();
+    window.addEventListener('resize', resizeCanvas);
+});
+</script>

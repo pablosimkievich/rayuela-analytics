@@ -19,8 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas
 app.use('/', require('./routes/home'));
-app.use('/grafik', require('./routes/grafik'));
-app.use('/estadisticas', require('./routes/estadisticas'));
+app.use('/graficos', require('./routes/grafik'));
 
 // Prueba de conexión a la base de datos
 sequelize.authenticate()

@@ -5,34 +5,43 @@
     <title>Rayuela Analytics</title>
     <link rel="stylesheet" href="/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            margin: 20px auto;
+            width: 95%;
+            max-width: 1200px;
+            position: relative;
+            background: #0A0203;
+            height: 80vh;
+        }
+
+        .star-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        canvas:not(.star-background) {
+            position: relative;
+            z-index: 1;
+            background: transparent;
+        }
+
+        body {
+            background: #0A0203;
+        }
+    </style>
     <%- defineContent('style') %>
 </head>
 <body>
-    <header class="header">
-        <nav class="nav-container">
-            <div class="nav-left">
-                <a href="/" class="nav-link">HOME</a>
-                <div class="dropdown">
-                    <a href="/grafik" class="nav-link">GRAFIK</a>
-                    <div class="dropdown-content">
-                        <a href="/grafik/lineas" class="nav-link">Gráfico de Líneas</a>
-                        <a href="/grafik/barras" class="nav-link">Gráfico de Barras</a>
-                        <a href="/grafik/pie" class="nav-link">Gráfico Circular</a>
-                        <a href="/grafik/productos-precio" class="nav-link">Productos por Precio</a>
-                        <a href="/grafik/compradores-no-compradores" class="nav-link">Compradores vs No Compradores</a>
-                    </div>
-                </div>
-            </div>
-            <div class="nav-right">
-                <a href="/estadisticas" class="nav-link">ESTADÍSTICAS</a>
-            </div>
-        </nav>
-    </header>
-
+    <%- include('../partials/header') %>
     <main class="main-content">
         <%- body %>
     </main>
-
     <%- defineContent('script') %>
 </body>
+</html>
 

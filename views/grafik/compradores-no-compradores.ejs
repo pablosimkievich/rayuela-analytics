@@ -1,42 +1,12 @@
 <%- contentFor('body') %>
-<div class="chart-container" style="height: 80vh; position: relative;">
+<div class="chart-container">
     <canvas id="starCanvas" class="star-background"></canvas>
     <canvas id="buyersChart"></canvas>
 </div>
 
-<%- contentFor('style') %>
-<style>
-.chart-container {
-    margin: 20px auto;
-    width: 95%;
-    max-width: 800px;
-    position: relative;
-    background: #0A0203;
-}
-
-.star-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-}
-
-#buyersChart {
-    position: relative;
-    z-index: 1;
-    background: transparent;
-}
-
-body {
-    background: #0A0203;
-}
-</style>
-
 <%- contentFor('script') %>
 <script>
-// Configuración de estrellas
+// Star background configuration
 const starCanvas = document.getElementById('starCanvas');
 const starCtx = starCanvas.getContext('2d');
 let stars = [];
@@ -48,6 +18,11 @@ function resizeCanvas() {
     
     starCanvas.width = width;
     starCanvas.height = height;
+    
+    const buyersChart = document.getElementById('buyersChart');
+    buyersChart.width = width;
+    buyersChart.height = height;
+    
     createStars();
 }
 
@@ -80,7 +55,7 @@ resizeCanvas();
 drawStars();
 window.addEventListener('resize', resizeCanvas);
 
-// Configuración del gráfico circular
+// Chart configuration
 const ctx = document.getElementById('buyersChart').getContext('2d');
 const data = <%- JSON.stringify(data) %>;
 
@@ -126,4 +101,5 @@ const chart = new Chart(ctx, {
     }
 });
 </script>
+
 

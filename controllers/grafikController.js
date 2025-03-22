@@ -97,14 +97,19 @@ module.exports = {
                 totalAmount: Number(results[0].dataValues.totalAmount).toFixed(2)
             };
 
-            const chartData = orders.map(order => ({
-                id: order.id,
-                amount: Number(order.order_total_amt),
-                date: order.order_date,
-                status: order.order_status
-            }));
+            // Format the dates properly
+            const chartData = orders.map(order => {
+                // Convert the raw order data to a plain object
+                const plainOrder = order.get({ plain: true });
+                return {
+                    id: plainOrder.id,
+                    amount: parseFloat(plainOrder.order_total_amt),
+                    date: plainOrder.order_date,  // This will be a simple date string
+                    status: plainOrder.order_status
+                };
+            });
 
-            console.log('Order statistics:', stats);
+            console.log('Chart data sample:', chartData[0]); // Debug log
 
             return res.render('grafik/monto-por-compra', {
                 data: stats,
@@ -121,6 +126,8 @@ module.exports = {
         }
     }
 };
+
+
 
 
 

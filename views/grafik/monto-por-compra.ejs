@@ -126,17 +126,19 @@
         // Orders Chart
         const chartData = <%- JSON.stringify(chartData) %>;
         const ctx = document.getElementById('ordersChart').getContext('2d');
-        
+
+        // Format date function
+        function formatDate(dateString) {
+            const parts = dateString.split('-');
+            return `${parts[2]}/${parts[1]}/${parts[0].substring(2)}`;
+        }
+
         new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: chartData.map(order => {
-                    const date = new Date(order.date).toLocaleDateString('es-ES', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: '2-digit'
-                    });
-                    return `${date} - Orden #${order.id}`;
+                    const formattedDate = formatDate(order.date);
+                    return `${formattedDate} - #${order.id}`;
                 }),
                 datasets: [{
                     label: 'Monto de Orden ($)',
@@ -205,4 +207,6 @@
     </script>
 </body>
 </html>
+
+
 

@@ -10,10 +10,11 @@
             background: #0A0203;
         }
         .chart-container {
-            margin: 20px auto;
+            margin: 20px auto 120px auto; /* Increased bottom margin */
             width: 95%;
             max-width: 1200px;
-            height: 80vh;
+            height: 90vh;
+            min-height: 600px;
             position: relative;
             background: #0A0203;
         }
@@ -57,9 +58,18 @@
         .chart-wrapper {
             position: relative;
             z-index: 1;
-            height: 60%;
+            height: 75vh;
             padding: 1rem;
-            margin-top: 2rem;
+            margin-bottom: 60px; /* Added bottom margin */
+        }
+        #ordersChart {
+            height: 100% !important;
+            margin-bottom: 40px; /* Added bottom margin */
+        }
+
+        /* Ensure main content has enough space */
+        .main-content {
+            margin-bottom: 60px;
         }
     </style>
 </head>
@@ -207,6 +217,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 

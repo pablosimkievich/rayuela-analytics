@@ -197,7 +197,63 @@ module.exports = {
         }
     },
     productosPorCategoria: async (req, res) => {
-        res.send('Productos por categoría')
+        try {
+            console.log('Starting productosPorCategoria controller');
+            
+            if (!db || !db.Product || !db.Category) {
+                throw new Error('Models not properly initialized');
+            }
+
+            // Get products count by category
+            const results = await db.Product.findAll({
+                attributes: [
+                    'category_id',
+                    [db.sequelize.fn('COUNT', db.sequelize.col('Product.id')), 'product_count'] // Specify Product.id
+                ],
+                include: [{
+                    model: db.Category,
+                    attributes: ['category_name'],
+                    required: true
+                }],
+                group: ['Product.category_id', 'Category.id', 'Category.category_name'],
+                order: [[db.sequelize.fn('COUNT', db.sequelize.col('Product.id')), 'DESC']]
+            });
+
+            if (!results || results.length === 0) {
+                return res.render('grafik/productos-por-categoria', {
+                    data: {
+                        labels: [],
+                        values: [],
+                        totalProducts: 0
+                    },
+                    title: 'Productos por Categoría',
+                    message: 'No hay datos disponibles'
+                });
+            }
+
+            // Calculate total products
+            const totalProducts = results.reduce((sum, item) => 
+                sum + parseInt(item.dataValues.product_count || 0), 0);
+
+            // Format data for the chart
+            const chartData = {
+                labels: results.map(item => item.Category ? item.Category.category_name : 'Categoría Desconocida'),
+                values: results.map(item => parseInt(item.dataValues.product_count) || 0),
+                totalProducts: totalProducts
+            };
+
+            return res.render('grafik/productos-por-categoria', {
+                data: chartData,
+                title: 'Productos por Categoría'
+            });
+
+        } catch (error) {
+            console.error('Error in productosPorCategoria:', error);
+            return res.status(500).json({
+                error: 'Error al obtener los datos de productos por categoría',
+                details: error.message
+            });
+        }
     }
 };
 

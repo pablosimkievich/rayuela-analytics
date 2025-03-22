@@ -1,5 +1,11 @@
 <div class="chart-container">
     <canvas id="starCanvas" class="star-background"></canvas>
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-label">Total Juguetes Vendidos</div>
+            <div class="stat-value"><%= data.totalSold %></div>
+        </div>
+    </div>
     <canvas id="salesChart"></canvas>
 </div>
 
@@ -144,4 +150,36 @@ new Chart(ctx, {
     position: relative;
     z-index: 1;
 }
+
+.stats-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: rgba(10, 2, 3, 0.9);
+    border: 2px solid #FF6B35;
+    border-radius: 10px;
+    padding: 2rem;
+    color: #FF6B35;
+    text-align: center;
+    box-shadow: 0 0 15px #FF6B35;
+    min-width: 250px;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    text-shadow: 0 0 10px #FF6B35;
+}
+
+.stat-label {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
 </style>
+

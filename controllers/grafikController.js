@@ -128,16 +128,9 @@ module.exports = {
     ventasPorProducto: async (req, res) => {
         try {
             console.log('Starting ventasPorProducto controller');
-
-            // More detailed model checking
-            if (!db) {
-                throw new Error('Database connection not initialized');
-            }
-            if (!db.OrderDetail) {
-                throw new Error('OrderDetail model not initialized');
-            }
-            if (!db.Product) {
-                throw new Error('Product model not initialized');
+            
+            if (!db || !db.OrderDetail || !db.Product) {
+                throw new Error('Models not properly initialized');
             }
 
             console.log('Models validated, executing query...');
@@ -163,21 +156,31 @@ module.exports = {
             if (!results || results.length === 0) {
                 console.log('No sales data found');
                 return res.render('grafik/ventas-por-producto', {
-                    data: { labels: [], values: [] },
+                    data: { 
+                        labels: [], 
+                        values: [],
+                        totalSold: 0 
+                    },
                     title: 'Ventas por Producto',
                     message: 'No hay datos de ventas disponibles'
                 });
             }
 
+            // Calculate total products sold
+            const totalSold = results.reduce((sum, item) => 
+                sum + parseInt(item.dataValues.total_quantity || 0), 0);
+
             // Format data for the chart
             const chartData = {
                 labels: results.map(item => item.Product ? item.Product.name : 'Producto Desconocido'),
-                values: results.map(item => parseInt(item.dataValues.total_quantity) || 0)
+                values: results.map(item => parseInt(item.dataValues.total_quantity) || 0),
+                totalSold: totalSold
             };
 
             console.log('Chart data prepared:', {
                 labelCount: chartData.labels.length,
-                valueCount: chartData.values.length
+                valueCount: chartData.values.length,
+                totalSold: chartData.totalSold
             });
 
             return res.render('grafik/ventas-por-producto', {
@@ -186,12 +189,7 @@ module.exports = {
             });
 
         } catch (error) {
-            console.error('Error detallado en ventasPorProducto:', {
-                message: error.message,
-                stack: error.stack,
-                name: error.name
-            });
-            
+            console.error('Error in ventasPorProducto:', error);
             return res.status(500).json({
                 error: 'Error al obtener los datos de ventas por producto',
                 details: error.message
